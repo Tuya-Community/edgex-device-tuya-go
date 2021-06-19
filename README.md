@@ -1,0 +1,1 @@
+# edgex-device-tuya-go
