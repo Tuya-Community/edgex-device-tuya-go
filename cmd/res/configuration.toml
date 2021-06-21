@@ -1,0 +1,86 @@
+[Writable]
+LogLevel = 'INFO'
+  # InsecureSecrets are required for when Redis is used for message bus
+  [Writable.InsecureSecrets]
+    [Writable.InsecureSecrets.DB]
+    path = "redisdb"
+      [Writable.InsecureSecrets.DB.Secrets]
+      username = ""
+      password = ""
+
+[Service]
+HealthCheckInterval = '10s'
+Host = '192.168.1.14' # Must be a definite IP address
+Port = 59988
+ServerBindAddr = ''  # blank value defaults to Service.Host value
+StartupMsg = 'device tuya started'
+# MaxRequestSize limit the request body size in byte of put command
+MaxRequestSize = 0 # value 0 unlimit the request size.
+RequestTimeout = '5s'
+
+[Registry]
+Host = 'localhost'
+Port = 8500
+Type = 'consul'
+
+[Clients]
+  [Clients.core-data]
+  Protocol = 'http'
+  Host = 'localhost'
+  Port = 59880
+
+  [Clients.core-metadata]
+  Protocol = 'http'
+  Host = 'localhost'
+  Port = 59881
+
+[MessageQueue]
+Protocol = 'redis'
+Host = 'localhost'
+Port = 6379
+Type = 'redis'
+AuthMode = 'usernamepassword'  # required for redis messagebus (secure or insecure).
+SecretName = "redisdb"
+PublishTopicPrefix = 'edgex/events/device' # /<device-profile-name>/<device-name>/<source-name> will be added to this Publish Topic prefix
+  [MessageQueue.Optional]
+  ClientId = "device-tuya"
+  # Connection information
+  Qos = "0" # Quality of Sevice values are 0 (At most once), 1 (At least once) or 2 (Exactly once)
+  KeepAlive = "10" # Seconds (must be 2 or greater)
+  Retained = "false"
+  AutoReconnect = "true"
+  ConnectTimeout = "5" # Seconds
+  SkipCertVerify = "false" # Only used if Cert/Key file or Cert/Key PEMblock are specified
+
+# Only used when EDGEX_SECURITY_SECRET_STORE=true which is now required for secure consul
+[SecretStore]
+Type = 'vault'
+Host = 'localhost'
+Port = 8200
+Path = 'device-tuya/'
+Protocol = 'http'
+RootCaCertPath = ''
+ServerName = ''
+TokenFile = '/tmp/edgex/secrets/device-tuya/secrets-token.json'
+  [SecretStore.Authentication]
+  AuthType = 'X-Vault-Token'
+
+[Device]
+DataTransform = true
+MaxCmdOps = 128
+MaxCmdValueLen = 256
+ProfilesDir = './res'
+DevicesDir = './res'
+UpdateLastConnected = false
+Labels = []
+EnableAsyncReadings = true
+AsyncBufferSize = 16
+UseMessageBus = true
+  [Device.Discovery]
+  Enabled = false
+  Interval = '30s'
+
+[TuyaConnectorInfo]
+AccessId = "xxxxxxxxxxxxxxx"
+AccessKey = "xxxxxxxxxxxxxxx"
+Region = "CN"

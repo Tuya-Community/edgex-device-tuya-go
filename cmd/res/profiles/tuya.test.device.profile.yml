@@ -1,0 +1,43 @@
+name: "Test.Device.TUYA.Profile"
+manufacturer: "Tuya"
+model: "socket"
+labels:
+  - "test"
+description: "Test device profile"
+deviceResources:
+  -
+    name: switch_1
+    isHidden: true
+    description: "switch_1"
+    attributes:
+      { Code: "switch_1" }
+    properties:
+      valueType: "Bool"
+      readWrite: "RW"
+      defaultValue: "false"
+  -
+    name: countdown_1
+    isHidden: true
+    description: "countdown for switch_1"
+    attributes:
+      { Code: "countdown_1" }
+    properties:
+      valueType: "Uint16"
+      readWrite: "RW"
+      defaultValue: "1"
+      minimum: "0"
+      maximum: "86400"
+
+deviceCommands:
+  -
+    name: switch_1
+    readWrite: "RW"
+    isHidden: false
+    resourceOperations:
+      - { deviceResource: "switch_1" }
+  -
+    name: countdown_1
+    readWrite: "RW"
+    isHidden: false
+    resourceOperations:
+      - { deviceResource: "countdown_1" }

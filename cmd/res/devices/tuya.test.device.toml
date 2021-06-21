@@ -1,0 +1,9 @@
+# Pre-define Devices
+[[DeviceList]]
+  Name = 'tuya-test-device'
+  ProfileName = 'Test.Device.TUYA.Profile'
+  Description = 'tuya device is created for test purpose'
+  labels = [ 'TUYA', 'test' ]
+  [DeviceList.Protocols]
+    [DeviceList.Protocols.tuya]
+      DeviceId = "xxxxxxxxxxxx"
