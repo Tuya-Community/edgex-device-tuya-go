@@ -22,7 +22,7 @@ deviceResources:
     attributes:
       { Code: "countdown_1" }
     properties:
-      valueType: "Uint16"
+      valueType: "Uint32"
       readWrite: "RW"
       defaultValue: "1"
       minimum: "0"
