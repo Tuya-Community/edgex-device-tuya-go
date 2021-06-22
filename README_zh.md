@@ -83,7 +83,7 @@ make get-token
    进入到项目的cmd目录中，运行
 
    ```
-   go run main.go
+   go run main.go --cp=consul.http://localhost:8500 --registry
    ```
 
    或者，如果你使用的是linux系统还可以通过docker的方式启动该驱动，该启动方式对mac无效（由于docker在mac上不支持host网络模式）

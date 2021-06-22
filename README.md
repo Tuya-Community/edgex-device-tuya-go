@@ -82,7 +82,7 @@ For detailed information about token generation in sec mode, please see: https:/
    Go to the cmd directory of the project and run
 
    ```
-   go run main.go
+   go run main.go --cp=consul.http://localhost:8500 --registry
    ```
 
    Or, if you are using a `linux` system, you can also start the driver through docker, which is invalid for mac (because docker does not support host network mode on mac)
