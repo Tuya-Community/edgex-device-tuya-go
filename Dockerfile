@@ -24,4 +24,4 @@ COPY --from=builder /device-tuya-go/cmd /
 EXPOSE 59988
 
 ENTRYPOINT ["/device-tuya"]
-CMD ["--confdir=/res"]
+CMD ["--cp=consul://edgex-core-consul:8500", "--registry", "--confdir=/res"]
