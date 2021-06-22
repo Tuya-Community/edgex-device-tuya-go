@@ -20,20 +20,36 @@
 git clone https://github.com/edgexfoundry/edgex-compose.git
 ```
 
-进入刚刚克隆到本地的`edgex-compose`目录，以no-sec模式运行
+进入刚刚克隆到本地的`edgex-compose`目录
+
+- 以**no-sec**模式运行
 
 ```
 make pull no-secty
 make run no-secty
 ```
 
+- 以**sec**模式运行
+
+```
+make pull
+make run
+make get-token
+```
+
 *可以使用`make down`命令停止所有的容器*
+
+有关docker-compose启动的详细信息请看 ：https://github.com/edgexfoundry/edgex-compose/blob/master/README.md
+
+有关sec模式下token生成的详细信息请看：https://github.com/edgexfoundry/edgex-go/blob/master/SECURITY.md
 
 ### 3. 运行device-tuya-go
 
 1. 请确保edgex已经成功运行
 
 2. 设置环境变量
+
+   如果运行在**sec**模式则设置为**true**
 
    ```
    EDGEX_SECURITY_SECRET_STORE=false
@@ -59,6 +75,8 @@ make run no-secty
      | 美国区 | US       |
      | 欧洲区 | EU       |
      | 印度区 | IN       |
+     
+   - 如果在**sec**模式下运行edgex则需要修改`[SecretStore]`中`TokenFile`的文件地址
 
 5. 运行驱动
 
@@ -77,16 +95,14 @@ make run no-secty
      ```
      make docker_device_tuya_go
      ```
-   
+
    - 运行docker
 
-     **注意挂载时的目录设置为你自己的目录**
+     **注意挂载时的目录设置为你自己的目录，如果是sec模式则设置EDGEX_SECURITY_SECRET_STORE="true"**
 
      ```
      docker run --name edgex-device-tuya -v /your/local/path/device-tuya-go/cmd/res:/res --network=host -e EDGEX_SECURITY_SECRET_STORE="false" -d edgexfoundry/device-tuya:0.0.0-dev
      ```
-   
-     
 
 6. 运行成功后
 

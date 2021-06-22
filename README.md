@@ -19,20 +19,36 @@ Download the latest edgex
 git clone https://github.com/edgexfoundry/edgex-compose.git
 ```
 
-Enter the `edgex-compose` directory that has just been cloned locally and run in `no-sec` mode
+Enter the `edgex-compose` directory that has just been cloned locally 
+
+- run in **no-sec** mode
 
 ```
 make pull no-secty
 make run no-secty
 ```
 
+- run in **sec** mode
+
+```
+make pull
+make run
+make get-token
+```
+
 *You can use the `make down` command to stop all containers*
+
+For more information about docker-compose startup, please see: https://github.com/edgexfoundry/edgex-compose/blob/master/README.md
+
+For detailed information about token generation in sec mode, please see: https://github.com/edgexfoundry/edgex-go/blob/master/SECURITY.md
 
 ### 3. Run device-tuya-go
 
 1. Please make sure that edgex has run successfully
 
 2. Set environment variables
+
+   Set to **true** if running in **sec** mode
 
    ```
    EDGEX_SECURITY_SECRET_STORE=false
@@ -58,6 +74,8 @@ make run no-secty
      | United States | US    |
      | European      | EU    |
      | India         | IN    |
+     
+   - If you run edgex in **sec** mode, you need to modify the file address of `TokenFile` in `[SecretStore]`
 
 5. Run drive
 
@@ -76,16 +94,14 @@ make run no-secty
      ```
      make docker_device_tuya_go
      ```
-   
+
    - Run docker
 
-     **Note that the directory when mounting is set to your own directory**
+     **Note that the directory when mounting is set to your own directory, If it is sec mode, set EDGEX_SECURITY_SECRET_STORE="true"**
 
      ```
      docker run --name edgex-device-tuya -v /your/local/path/device-tuya-go/cmd/res:/res --network=host -e EDGEX_SECURITY_SECRET_STORE="false" -d edgexfoundry/device-tuya:0.0.0-dev
      ```
-   
-     
 
 6. After running successfully
 
