@@ -75,7 +75,7 @@ make run no-secty
      进入项目根目录
 
      ```
-    make docker_device_tuya_go
+     make docker_device_tuya_go
      ```
    
    - 运行docker
@@ -83,7 +83,7 @@ make run no-secty
      **注意挂载时的目录设置为你自己的目录**
 
      ```
-    docker run --name edgex-device-tuya -v /your/local/path/device-tuya-go/cmd/res:/res --network=host -e EDGEX_SECURITY_SECRET_STORE="false" -d edgexfoundry/device-tuya:0.0.0-dev
+     docker run --name edgex-device-tuya -v /your/local/path/device-tuya-go/cmd/res:/res --network=host -e EDGEX_SECURITY_SECRET_STORE="false" -d edgexfoundry/device-tuya:0.0.0-dev
      ```
    
      
