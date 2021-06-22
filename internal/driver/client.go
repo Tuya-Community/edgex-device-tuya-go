@@ -49,13 +49,17 @@ func (c *tuyaClient) GetValue(param *GetParam) (interface{}, error) {
 		connector.WithResp(resp),
 	)
 
+	if err != nil {
+		return nil, err
+	}
+
 	for _, each := range resp.Result {
 		if each.Code == param.Code {
 			return each.Value, nil
 		}
 	}
 
-	return nil, err
+	return nil, nil
 }
 
 func (c *tuyaClient) SetValue(param *SetParam) error {
@@ -75,11 +79,15 @@ func (c *tuyaClient) SetValue(param *SetParam) error {
 		connector.WithResp(resp),
 	)
 
+	if err != nil {
+		return err
+	}
+
 	if !resp.Result {
 		return errors.New("send set command error")
 	}
 
-	return err
+	return nil
 }
 
 func NewClientFromCache(deviceId string, protocols map[string]models.ProtocolProperties) (Client, error) {
