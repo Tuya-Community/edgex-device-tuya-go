@@ -29,7 +29,7 @@ make run no-secty
 
 *可以使用`make down`命令停止所有的容器*
 
-### 3. 源码运行device-tuya-go
+### 3. 运行device-tuya-go
 
 1. 请确保edgex已经成功运行
 
