@@ -111,23 +111,6 @@ func (d *Driver) Initialize(lc logger.LoggingClient, asyncCh chan<- *sdkModel.As
 		env.WithMsgHost(msgHost),
 	)
 
-	// we don't need sub message for this driver
-	//go func() {
-	//	message.Handler.InitMessageClient()
-	//
-	//	message.Handler.SubEventMessage(func(m *event.NameUpdateMessage) {
-	//		d.Logger.Info("=========== name update： ==========")
-	//		d.Logger.Infof("%v", *m)
-	//	})
-	//
-	//	message.Handler.SubEventMessage(func(m *event.StatusReportMessage) {
-	//		d.Logger.Info("=========== report data： ==========")
-	//		for _, v := range m.Status {
-	//			d.Logger.Infof(v.Code, v.Value)
-	//		}
-	//	})
-	//}()
-
 	return nil
 }
 
