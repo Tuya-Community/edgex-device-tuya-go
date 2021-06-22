@@ -88,16 +88,16 @@ func (d *Driver) Initialize(lc logger.LoggingClient, asyncCh chan<- *sdkModel.As
 	apiHost := ""
 	msgHost := ""
 	switch region {
-	case "CN":
+	case RegionCN:
 		apiHost = httplib.URL_CN
 		msgHost = httplib.MSG_CN
-	case "US":
+	case RegionUS:
 		apiHost = httplib.URL_US
 		msgHost = httplib.MSG_US
-	case "EU":
+	case RegionEU:
 		apiHost = httplib.URL_EU
 		msgHost = httplib.MSG_EU
-	case "IN":
+	case RegionIN:
 		apiHost = httplib.URL_IN
 		msgHost = httplib.MSG_IN
 	default:
