@@ -86,7 +86,7 @@ make get-token
    go run main.go --cp=consul.http://localhost:8500 --registry
    ```
 
-   或者，如果你使用的是linux系统还可以通过docker的方式启动该驱动，该启动方式对mac无效（由于docker在mac上不支持host网络模式）
+   或者，使用docker启动
 
    - 获取docker镜像
 
@@ -101,8 +101,22 @@ make get-token
      **注意挂载时的目录设置为你自己的目录，如果是sec模式则设置EDGEX_SECURITY_SECRET_STORE="true"**
 
      ```
-     docker run --name edgex-device-tuya -v /your/local/path/device-tuya-go/cmd/res:/res --network=host -e EDGEX_SECURITY_SECRET_STORE="false" -d edgexfoundry/device-tuya:0.0.0-dev
+     docker run --name edgex-device-tuya \
+       --network=edgex_edgex-network \
+       -v /your/local/path/device-tuya-go/cmd/res:/res \
+       -e CLIENTS_CORE_COMMAND_HOST="edgex-core-command" \
+       -e CLIENTS_CORE_DATA_HOST="edgex-core-data" \
+       -e CLIENTS_CORE_METADATA_HOST="edgex-core-metadata" \
+       -e CLIENTS_SUPPORT_NOTIFICATIONS_HOST="edgex-support-notifications" \
+       -e CLIENTS_SUPPORT_SCHEDULER_HOST="edgex-support-scheduler" \
+       -e DATABASES_PRIMARY_HOST="edgex-redis" \
+       -e EDGEX_SECURITY_SECRET_STORE="false" \
+       -e MESSAGEQUEUE_HOST="edgex-redis" \
+       -e REGISTRY_HOST="edgex-core-consul" \
+       -e SERVICE_HOST="edgex-device-tuya" \
+       -d edgexfoundry/device-tuya:0.0.0-dev
      ```
+     
 
 6. 运行成功后
 

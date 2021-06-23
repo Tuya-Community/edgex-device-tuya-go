@@ -85,7 +85,7 @@ For detailed information about token generation in sec mode, please see: https:/
    go run main.go --cp=consul.http://localhost:8500 --registry
    ```
 
-   Or, if you are using a `linux` system, you can also start the driver through docker, which is invalid for mac (because docker does not support host network mode on mac)
+   Or, you can also start the driver through docker
 
    - Get the docker image
 
@@ -97,11 +97,25 @@ For detailed information about token generation in sec mode, please see: https:/
 
    - Run docker
 
-     **Note that the directory when mounting is set to your own directory, If it is sec mode, set EDGEX_SECURITY_SECRET_STORE="true"**
+     **Note that the directory when mounting is set to your own directory, If it is `sec` mode, set EDGEX_SECURITY_SECRET_STORE="true"**
 
      ```
-     docker run --name edgex-device-tuya -v /your/local/path/device-tuya-go/cmd/res:/res --network=host -e EDGEX_SECURITY_SECRET_STORE="false" -d edgexfoundry/device-tuya:0.0.0-dev
+     docker run --name edgex-device-tuya \
+       --network=edgex_edgex-network \
+       -v /your/local/path/device-tuya-go/cmd/res:/res \
+       -e CLIENTS_CORE_COMMAND_HOST="edgex-core-command" \
+       -e CLIENTS_CORE_DATA_HOST="edgex-core-data" \
+       -e CLIENTS_CORE_METADATA_HOST="edgex-core-metadata" \
+       -e CLIENTS_SUPPORT_NOTIFICATIONS_HOST="edgex-support-notifications" \
+       -e CLIENTS_SUPPORT_SCHEDULER_HOST="edgex-support-scheduler" \
+       -e DATABASES_PRIMARY_HOST="edgex-redis" \
+       -e EDGEX_SECURITY_SECRET_STORE="false" \
+       -e MESSAGEQUEUE_HOST="edgex-redis" \
+       -e REGISTRY_HOST="edgex-core-consul" \
+       -e SERVICE_HOST="edgex-device-tuya" \
+       -d edgexfoundry/device-tuya:0.0.0-dev
      ```
+     
 
 6. After running successfully
 
