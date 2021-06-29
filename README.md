@@ -70,7 +70,7 @@ For more information about token generation in `sec` mode, visit https://github.
     - Modify all data under `[TuyaConnectorInfo]`. The data is the project information created on the Cloud Development Platform in Step 1. The following table shows the settings of `Region`:
 
       | Region        | Value |
-           | ------------- | ----- |
+      | ------------- | ----- |
       | China         | CN    |
       | United States | US    |
       | European      | EU    |
