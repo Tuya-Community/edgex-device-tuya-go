@@ -3,150 +3,150 @@
 [English](./README.md) | [中文版](./README_zh.md)
 
 ## Overview
-Tuya Micro Service - device service for connecting Tuya devices to EdgeX.
+This topic describes Tuya's microservice, the device service for connecting `Powered by Tuya` devices to EdgeX.
 
-## Usage
+## Procedure
 
-### 1. Prepare
+### Step 1: Preparation
 
-**Please create a project in the [Tuya IoT platform cloud development](https://iot.tuya.com/cloud/) in advance and make sure that at least one device is associated with the project**
+Create a project on Tuya's [Cloud Development Platform](https://iot.tuya.com/cloud/) and associate at least one device with the project.
 
-### 2. Run edgex
+### Step 2: Run EdgeX
 
-Download the latest edgex
+1. Download the latest version of EdgeX.
 
 ```
 git clone https://github.com/edgexfoundry/edgex-compose.git
 ```
 
-Enter the `edgex-compose` directory that has just been cloned locally 
+2. Open the `edgex-compose` directory that has just been cloned locally.
 
-- run in **no-sec** mode
+    - run EdgeX in `no-sec` mode.
 
-```
-make pull no-secty
-make run no-secty
-```
+   ```
+   make pull no-secty
+   make run no-secty
+   ```
 
-- run in **sec** mode
+    - run EdgeX in `sec` mode.
 
-```
-make pull
-make run
-make get-token
-```
+   ```
+   make pull
+   make run
+   make get-token
+   ```
+:::info
+You can run the `make down` command to stop all containers.
+:::
 
-*You can use the `make down` command to stop all containers*
+For more information about docker-compose startup, visit https://github.com/edgexfoundry/edgex-compose/blob/master/README.md.
 
-For more information about docker-compose startup, please see: https://github.com/edgexfoundry/edgex-compose/blob/master/README.md
+For more information about token generation in `sec` mode, visit https://github.com/edgexfoundry/edgex-go/blob/master/SECURITY.md.
 
-For detailed information about token generation in sec mode, please see: https://github.com/edgexfoundry/edgex-go/blob/master/SECURITY.md
+### Step 3: Run device-tuya-go
 
-### 3. Run device-tuya-go
+1. Make sure that EdgeX is running as expected.
 
-1. Please make sure that edgex has run successfully
+2. Set environment variables.
 
-2. Set environment variables
-
-   Set to **true** if running in **sec** mode
+   Set the following option to **true** in **sec** mode.
 
    ```
    EDGEX_SECURITY_SECRET_STORE=false
    ```
 
-3. Get the latest driver code from github
+3. Get the latest driver code from GitHub.
 
    ```
    git clone https://github.com/Tuya-Community/edgex-device-tuya-go.git
    ```
 
-4. Modify the configuration file before the driver runs
+4. Modify the configuration file before you run the driver.
 
-   The points that must be modified are:
+   The following configurations are required:
 
-   - Modify `Service.Host` to the **exact IP address** of the host running the driver, **cannot** be localhost, 127.0.0.1, 0.0.0.0, etc.
+    - Set `Service.Host` to the **exact IP address** of the host running the driver, **rather than** the localhost such as `127.0.0.1, 0.0.0.0`.
 
-   - Modify all the content under `[TuyaConnectorInfo]`. These data are the project-related information created in the first step Tuya IoT cloud platform. The rules for filling in `Region` are as follows:
+    - Modify all data under `[TuyaConnectorInfo]`. The data is the project information created on the Cloud Development Platform in Step 1. The following table shows the settings of `Region`:
 
-     | Region        | Value |
-     | ------------- | ----- |
-     | China         | CN    |
-     | United States | US    |
-     | European      | EU    |
-     | India         | IN    |
-     
-   - If you run edgex in **sec** mode, you need to modify the file address of `TokenFile` in `[SecretStore]`
+      | Region        | Value |
+           | ------------- | ----- |
+      | China         | CN    |
+      | United States | US    |
+      | European      | EU    |
+      | India         | IN    |
 
-5. Run drive
+    - If you run EdgeX in **sec** mode, modify the file address of `TokenFile` in `[SecretStore]`.
 
-   Go to the cmd directory of the project and run
+5. Run the driver.
+
+   Go to the `cmd` directory of the project and run the following code:
 
    ```
    go run main.go --cp=consul.http://localhost:8500 --registry
    ```
 
-   Or, you can also start the driver through docker
+   You can also start the driver on Docker:
 
-   - Get the docker image
+    - Get the docker image.
 
-     Enter the project root directory
+      Enter the project root directory:
 
-     ```
-     make docker_device_tuya_go
-     ```
+      ```
+      make docker_device_tuya_go
+      ```
 
-   - Run docker
+    - Run the driver on Docker.
+      :::important
+      The directory to be mounted is set to the directory in your project. In `sec` mode, apply this setting: `EDGEX_SECURITY_SECRET_STORE="true"`.
+      :::
+      ```
+      docker run --name edgex-device-tuya \
+        --network=edgex_edgex-network \
+        -v /your/local/path/device-tuya-go/cmd/res:/res \
+        -e CLIENTS_CORE_COMMAND_HOST="edgex-core-command" \
+        -e CLIENTS_CORE_DATA_HOST="edgex-core-data" \
+        -e CLIENTS_CORE_METADATA_HOST="edgex-core-metadata" \
+        -e CLIENTS_SUPPORT_NOTIFICATIONS_HOST="edgex-support-notifications" \
+        -e CLIENTS_SUPPORT_SCHEDULER_HOST="edgex-support-scheduler" \
+        -e DATABASES_PRIMARY_HOST="edgex-redis" \
+        -e EDGEX_SECURITY_SECRET_STORE="false" \
+        -e MESSAGEQUEUE_HOST="edgex-redis" \
+        -e REGISTRY_HOST="edgex-core-consul" \
+        -e SERVICE_HOST="edgex-device-tuya" \
+        -d edgexfoundry/device-tuya:0.0.0-dev
+      ```
 
-     **Note that the directory when mounting is set to your own directory, If it is `sec` mode, set EDGEX_SECURITY_SECRET_STORE="true"**
+1. View the device service name.
 
-     ```
-     docker run --name edgex-device-tuya \
-       --network=edgex_edgex-network \
-       -v /your/local/path/device-tuya-go/cmd/res:/res \
-       -e CLIENTS_CORE_COMMAND_HOST="edgex-core-command" \
-       -e CLIENTS_CORE_DATA_HOST="edgex-core-data" \
-       -e CLIENTS_CORE_METADATA_HOST="edgex-core-metadata" \
-       -e CLIENTS_SUPPORT_NOTIFICATIONS_HOST="edgex-support-notifications" \
-       -e CLIENTS_SUPPORT_SCHEDULER_HOST="edgex-support-scheduler" \
-       -e DATABASES_PRIMARY_HOST="edgex-redis" \
-       -e EDGEX_SECURITY_SECRET_STORE="false" \
-       -e MESSAGEQUEUE_HOST="edgex-redis" \
-       -e REGISTRY_HOST="edgex-core-consul" \
-       -e SERVICE_HOST="edgex-device-tuya" \
-       -d edgexfoundry/device-tuya:0.0.0-dev
-     ```
-     
-
-6. After running successfully
-
-   After the operation is successful, the device service will be automatically registered into the core-metadata of edgex and the name is `device-tuya`, which can be viewed by the following command
+   After the driver is running as expected, the device service is automatically registered to `core-metadata` of EdgeX and the service name is `device-tuya`. To view the service name, run the following command:
 
    ```
    curl http://localhost:59881/api/v2/deviceservice/name/device-tuya
    ```
 
-### 4. Add device
+### Step 4: Add devices
 
-We add the devices added to the iot project in the first step to the core-metadata of edgex
+Add the devices that have been added to the IoT project in Step 1 to `core-metadata` of EdgeX. Perform the following steps:
 
-1. Add device profile
+1. Add the device profile.
 
-   A demo file is prepared in the `cmd/res/` directory of the project. The example file is a socket. You can modify it into the configuration file of the corresponding device according to this file. The demo configuration file is as follows:
+   A sample file is prepared in the `cmd/res/` directory of the project. The sample file is a socket. You can modify it as the configuration file of the device to be added. The following code block shows the sample file:
 
    ```yaml
-   name: "Test.Device.TUYA.Profile"	# This name must be unique
+   name: "Test.Device.TUYA.Profile"	# This name must be unique.
    manufacturer: "Tuya"
    model: "socket"
    labels:
      - "test"
    description: "Test device profile"
-   deviceResources:	# What is defined here is the function point of the device
+   deviceResources:	# The data point (DP) of the device.
      -
-       name: switch_1	# You can set this name as same as the `Code` below 
+       name: switch_1	# You can set this name to the same value as `Code`.
        isHidden: true
        description: "switch_1"
        attributes:
-         { Code: "switch_1" }	# You can get this code from Tuya IoT platform
+         { Code: "switch_1" }	# You can get this code from the Tuya IoT Platform.
        properties:
          valueType: "Bool"
          readWrite: "RW"
@@ -164,13 +164,13 @@ We add the devices added to the iot project in the first step to the core-metada
          minimum: "0"
          maximum: "86400"
    
-   deviceCommands:	# Defined here are device commands
+   deviceCommands:	# The device commands.
      -
-       name: switch_1	# You can set this name as same as the resource name
+       name: switch_1	# You can set this name to the same value as the resource name.
        readWrite: "RW"
        isHidden: false
        resourceOperations:
-         - { deviceResource: "switch_1" }	# Resources corresponding to this command
+         - { deviceResource: "switch_1" }	# The resources that are managed in this command.
      -
        name: countdown_1
        readWrite: "RW"
@@ -180,25 +180,27 @@ We add the devices added to the iot project in the first step to the core-metada
    
    ```
 
-   Reference page for cloud platform
+   The following figure shows the sample code on the Cloud Development Platform:
 
    ![image-20210622114727864](./image/image-20210622151011131.png)
 
-   After preparing the device configuration file, use the following command to register the device profile file into edgex's core-metadata service, **pay attention to modifying the path of the configuration file**
-
+   After the device configuration file is prepared, run the following command to register the device profile to the `core-metadata` service of EdgeX.
+   :::important
+   The path of the configuration file must be configured correctly.
+   :::
    ```
    curl http://localhost:59881/api/v2/deviceprofile/uploadfile -X POST -F "file=@<Fill in the specific profile file path>"
    ```
 
-   If the above command does not report an exception, it means that the device profile file has been successfully added. You can use the following command to view the profile file just added. Note that the `Test.Device.TUYA.Profile` is changed to the name item in your profile file Value.
+   Without error messages returned, the device profile is added as expected. You can run the following command to view the newly added profile. Note that `Test.Device.TUYA.Profile` is changed to the value of the `name` option in your profile file.
 
    ```
    curl http://localhost:59881/api/v2/deviceprofile/name/Test.Device.TUYA.Profile
    ```
 
-2. Add device
+1. Add a device.
 
-   Execute the command below to add a device, pay attention to the item `DeviceId`, change it to the device id added in the cloud platform in the first step, `serviceName` is `device-tuya`, `profileName` is the profile name added in the previous step, `name `Is the name of the device (custom, tuya-test-device in the example).
+   Run the following command to add a device. In the following code block, set the option `DeviceId` to the device ID that has been added on the Cloud Development Platform in Step 1, `serviceName` to `device-tuya`, `profileName` to the profile name added in the previous step, and `name ` to the name of the device. The device name can be customized, for example, `tuya-test-device`.
 
    ```
    curl http://localhost:59881/api/v2/device -X POST -H "Content-Type: application/json" -d \
@@ -228,21 +230,21 @@ We add the devices added to the iot project in the first step to the core-metada
    
    ```
 
-### 5. Send command
+### Step 5: Send commands
 
-The api for sending the command is `http://localhost:59882/api/v2/device/name/<device_name>/<command_name>`
+Use the following API endpoint to send a command: `http://localhost:59882/api/v2/device/name/<device_name>/<command_name>`
 
-Take the demo as an example, device_name="tuya-test-device", command_name="switch_1"
+In the sample of this topic, set `device_name` to `tuya-test-device` and set `command_name` to `switch_1`. Run the following commands:
 
-1. Send `GET` command
+1. Send the `GET` command.
 
    ```
    curl http://localhost:59882/api/v2/device/name/tuya-test-device/switch_1
    ```
 
-2. Send `SET` command
+2. Send the `SET` command.
 
-   The SET command needs to be sent through the PUT method. The data type carried is json, the key is the command name, and the value is the value to be set (key and value are both string types), such as the following demo
+   The `SET` command is sent with the `PUT` method. In the following code block, the JSON data type is used. The key is the command name, and the value is the value to be specified. The key and value are both of string type.
 
    ```
    curl http://localhost:59882/api/v2/device/name/tuya-test-device/switch_1 -X PUT \
@@ -253,9 +255,9 @@ Take the demo as an example, device_name="tuya-test-device", command_name="switc
    ```
 
 ## Community
-- Chat: https://edgexfoundry.slack.com
+- Chats: https://edgexfoundry.slack.com
 - Mailing lists: https://lists.edgexfoundry.org/mailman/listinfo
 - Tuya Developer: https://developer.tuya.com/en/
 
 ## License
-[MIT](LICENSE)
+For more information about the license, see [MIT License](LICENSE).
