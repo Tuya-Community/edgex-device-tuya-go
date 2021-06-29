@@ -21,23 +21,23 @@ git clone https://github.com/edgexfoundry/edgex-compose.git
 
 2. Open the `edgex-compose` directory that has just been cloned locally.
 
-    - run EdgeX in `no-sec` mode.
+   - run EdgeX in `no-sec` mode.
 
    ```
    make pull no-secty
    make run no-secty
    ```
 
-    - run EdgeX in `sec` mode.
+   - run EdgeX in `sec` mode.
 
    ```
    make pull
    make run
    make get-token
    ```
-:::info
-You can run the `make down` command to stop all containers.
-:::
+>**Note**：
+>You can run the `make down` command to stop all containers.
+
 
 For more information about docker-compose startup, visit https://github.com/edgexfoundry/edgex-compose/blob/master/README.md.
 
@@ -65,18 +65,18 @@ For more information about token generation in `sec` mode, visit https://github.
 
    The following configurations are required:
 
-    - Set `Service.Host` to the **exact IP address** of the host running the driver, **rather than** the localhost such as `127.0.0.1, 0.0.0.0`.
+   - Set `Service.Host` to the **exact IP address** of the host running the driver, **rather than** the localhost such as `127.0.0.1, 0.0.0.0`.
 
-    - Modify all data under `[TuyaConnectorInfo]`. The data is the project information created on the Cloud Development Platform in Step 1. The following table shows the settings of `Region`:
+   - Modify all data under `[TuyaConnectorInfo]`. The data is the project information created on the Cloud Development Platform in Step 1. The following table shows the settings of `Region`:
 
-      | Region        | Value |
-      | ------------- | ----- |
-      | China         | CN    |
-      | United States | US    |
-      | European      | EU    |
-      | India         | IN    |
+     | Region        | Value |
+     | ------------- | ----- |
+     | China         | CN    |
+     | United States | US    |
+     | European      | EU    |
+     | India         | IN    |
 
-    - If you run EdgeX in **sec** mode, modify the file address of `TokenFile` in `[SecretStore]`.
+   - If you run EdgeX in **sec** mode, modify the file address of `TokenFile` in `[SecretStore]`.
 
 5. Run the driver.
 
@@ -88,33 +88,33 @@ For more information about token generation in `sec` mode, visit https://github.
 
    You can also start the driver on Docker:
 
-    - Get the docker image.
+   - Get the docker image.
 
-      Enter the project root directory:
+     Enter the project root directory:
 
-      ```
-      make docker_device_tuya_go
-      ```
+     ```
+     make docker_device_tuya_go
+     ```
 
-    - Run the driver on Docker.
-      :::important
-      The directory to be mounted is set to the directory in your project. In `sec` mode, apply this setting: `EDGEX_SECURITY_SECRET_STORE="true"`.
-      :::
+   - Run the driver on Docker.
+   >**Note**：
+   >The directory to be mounted is set to the directory in your project. In `sec` >mode, apply this setting: `EDGEX_SECURITY_SECRET_STORE="true"`.
+
       ```
       docker run --name edgex-device-tuya \
-        --network=edgex_edgex-network \
-        -v /your/local/path/device-tuya-go/cmd/res:/res \
-        -e CLIENTS_CORE_COMMAND_HOST="edgex-core-command" \
-        -e CLIENTS_CORE_DATA_HOST="edgex-core-data" \
-        -e CLIENTS_CORE_METADATA_HOST="edgex-core-metadata" \
-        -e CLIENTS_SUPPORT_NOTIFICATIONS_HOST="edgex-support-notifications" \
-        -e CLIENTS_SUPPORT_SCHEDULER_HOST="edgex-support-scheduler" \
-        -e DATABASES_PRIMARY_HOST="edgex-redis" \
-        -e EDGEX_SECURITY_SECRET_STORE="false" \
-        -e MESSAGEQUEUE_HOST="edgex-redis" \
-        -e REGISTRY_HOST="edgex-core-consul" \
-        -e SERVICE_HOST="edgex-device-tuya" \
-        -d edgexfoundry/device-tuya:0.0.0-dev
+         --network=edgex_edgex-network \
+         -v /your/local/path/device-tuya-go/cmd/res:/res \
+         -e CLIENTS_CORE_COMMAND_HOST="edgex-core-command" \
+         -e CLIENTS_CORE_DATA_HOST="edgex-core-data" \
+         -e CLIENTS_CORE_METADATA_HOST="edgex-core-metadata" \
+         -e CLIENTS_SUPPORT_NOTIFICATIONS_HOST="edgex-support-notifications" \
+         -e CLIENTS_SUPPORT_SCHEDULER_HOST="edgex-support-scheduler" \
+         -e DATABASES_PRIMARY_HOST="edgex-redis" \
+         -e EDGEX_SECURITY_SECRET_STORE="false" \
+         -e MESSAGEQUEUE_HOST="edgex-redis" \
+         -e REGISTRY_HOST="edgex-core-consul" \
+         -e SERVICE_HOST="edgex-device-tuya" \
+         -d edgexfoundry/device-tuya:0.0.0-dev
       ```
 
 1. View the device service name.
@@ -185,18 +185,18 @@ Add the devices that have been added to the IoT project in Step 1 to `core-metad
    ![image-20210622114727864](./image/image-20210622151011131.png)
 
    After the device configuration file is prepared, run the following command to register the device profile to the `core-metadata` service of EdgeX.
-   :::important
-   The path of the configuration file must be configured correctly.
-   :::
-   ```
-   curl http://localhost:59881/api/v2/deviceprofile/uploadfile -X POST -F "file=@<Fill in the specific profile file path>"
-   ```
+   >**Note**：
+   >The path of the configuration file must be configured correctly.
+
+      ```
+      curl http://localhost:59881/api/v2/deviceprofile/uploadfile -X POST -F "file=@<Fill in the specific profile file path>"
+      ```
 
    Without error messages returned, the device profile is added as expected. You can run the following command to view the newly added profile. Note that `Test.Device.TUYA.Profile` is changed to the value of the `name` option in your profile file.
 
-   ```
-   curl http://localhost:59881/api/v2/deviceprofile/name/Test.Device.TUYA.Profile
-   ```
+      ```
+      curl http://localhost:59881/api/v2/deviceprofile/name/Test.Device.TUYA.Profile
+      ```
 
 1. Add a device.
 
