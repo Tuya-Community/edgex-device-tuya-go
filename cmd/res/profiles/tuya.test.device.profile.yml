@@ -1,4 +1,4 @@
-name: "Test.Device.TUYA.Profile"
+name: "TestDeviceTuyaProfile"
 manufacturer: "Tuya"
 model: "socket"
 labels:

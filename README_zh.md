@@ -135,7 +135,7 @@ make get-token
    在项目的`cmd/res/`目录中准备了一份demo文件，示例文件是一个插座，可以按照这个文件修改成对应设备的配置文件，demo配置文件如下：
 
    ```yaml
-   name: "Test.Device.TUYA.Profile"	# 这一项为profile文件的名称，多个profile的名称不可相同
+   name: "TestDeviceTuyaProfile"	# 这一项为profile文件的名称，多个profile的名称不可相同
    manufacturer: "Tuya"	# 制造厂商，可以不改
    model: "socket"	# 设备模型
    labels:
@@ -191,10 +191,10 @@ make get-token
    curl http://localhost:59881/api/v2/deviceprofile/uploadfile -X POST -F "file=@<填写具体的profile文件路径>"
    ```
 
-   如果上述命令没有报异常，那就说明设备配置文件已经被成功添加了，可以通过下面命令查看刚刚添加的配置文件，注意将`Test.Device.TUYA.Profile`改为你配置文件中的name项的值。
+   如果上述命令没有报异常，那就说明设备配置文件已经被成功添加了，可以通过下面命令查看刚刚添加的配置文件，注意将`TestDeviceTuyaProfile`改为你配置文件中的name项的值。
 
    ```
-   curl http://localhost:59881/api/v2/deviceprofile/name/Test.Device.TUYA.Profile
+   curl http://localhost:59881/api/v2/deviceprofile/name/TestDeviceTuyaProfile
    ```
 
 2. 添加设备
@@ -217,7 +217,7 @@ make get-token
                    "test"
                ],
                "serviceName":"device-tuya",
-               "profileName":"Test.Device.TUYA.Profile",
+               "profileName":"TestDeviceTuyaProfile",
                "protocols":{
                    "tuya":{
                        "DeviceId":"06870016bcddc237998d"

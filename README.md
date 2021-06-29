@@ -134,7 +134,7 @@ Add the devices that have been added to the IoT project in Step 1 to `core-metad
    A sample file is prepared in the `cmd/res/` directory of the project. The sample file is a socket. You can modify it as the configuration file of the device to be added. The following code block shows the sample file:
 
    ```yaml
-   name: "Test.Device.TUYA.Profile"	# This name must be unique.
+   name: "TestDeviceTuyaProfile"	# This name must be unique.
    manufacturer: "Tuya"
    model: "socket"
    labels:
@@ -192,10 +192,10 @@ Add the devices that have been added to the IoT project in Step 1 to `core-metad
       curl http://localhost:59881/api/v2/deviceprofile/uploadfile -X POST -F "file=@<Fill in the specific profile file path>"
       ```
 
-   Without error messages returned, the device profile is added as expected. You can run the following command to view the newly added profile. Note that `Test.Device.TUYA.Profile` is changed to the value of the `name` option in your profile file.
+   Without error messages returned, the device profile is added as expected. You can run the following command to view the newly added profile. Note that `TestDeviceTuyaProfile` is changed to the value of the `name` option in your profile file.
 
       ```
-      curl http://localhost:59881/api/v2/deviceprofile/name/Test.Device.TUYA.Profile
+      curl http://localhost:59881/api/v2/deviceprofile/name/TestDeviceTuyaProfile
       ```
 
 1. Add a device.
@@ -218,7 +218,7 @@ Add the devices that have been added to the IoT project in Step 1 to `core-metad
                    "test"
                ],
                "serviceName":"device-tuya",
-               "profileName":"Test.Device.TUYA.Profile",
+               "profileName":"TestDeviceTuyaProfile",
                "protocols":{
                    "tuya":{
                        "DeviceId":"06870016bcddc237998d"
