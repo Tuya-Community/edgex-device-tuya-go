@@ -98,7 +98,7 @@ For more information about token generation in `sec` mode, visit https://github.
 
    - Run the driver on Docker.
    >**Note**：
-   >The directory to be mounted is set to the directory in your project. In `sec` >mode, apply this setting: `EDGEX_SECURITY_SECRET_STORE="true"`.
+   >The directory to be mounted is set to the directory in your project. In `sec` mode, apply this setting: `EDGEX_SECURITY_SECRET_STORE="true"`.
 
       ```
       docker run --name edgex-device-tuya \
